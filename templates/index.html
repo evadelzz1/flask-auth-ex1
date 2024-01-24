@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block style %}
+body
+{
+  background-image:url('./static/bg_clouds.jpg');
+  background-size: cover;
+  background-repeat:no-repeat;
+}
+{% endblock style %}
+
+{% block title %}
+Auth system
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class=" row justify-content-center">
+        <div class="col-sm-8">
+            <h2>Home page</h2>
+            <a href="/register" class="btn btn-primary mt-3">Register</a>
+            <a href="/login" class="btn btn-dark mt-3">Login</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
