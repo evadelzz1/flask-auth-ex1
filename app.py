@@ -5,7 +5,8 @@ import bcrypt
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
-app.secret_key = 'secret_key'
+app.secret_key = 'secret_key'   # python -c 'import secrets; print(secrets.token_hex())' 
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,13 +20,15 @@ class User(db.Model):
         self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
     def check_password(self, password):
-        return bcrypt.checkpw(password.encode('utf-8'),self.password.encode('utf-8'))
+        return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
+
 
 with app.app_context():
     db.create_all()
 
 
 @app.route('/')
+@app.route('/index.html')
 def index():
     return render_template('index.html')
 
@@ -38,7 +41,7 @@ def register():
         email = request.form['email']
         password = request.form['password']
 
-        new_user = User(name=name,email=email,password=password)
+        new_user = User(name=name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
         return redirect('/')
@@ -58,24 +61,29 @@ def login():
             session['email'] = user.email
             return redirect('/dashboard')
         else:
-            return render_template('login.html',error='Invalid user')
+            return render_template('login.html', error='Invalid user')
 
     return render_template('login.html')
-
-
+    
+    
 @app.route('/dashboard')
 def dashboard():
-    if session['email']:
+    if 'email' in session:
         user = User.query.filter_by(email=session['email']).first()
-        return render_template('dashboard.html',user=user)
-    
+        if user:
+            return render_template('dashboard.html', user=user)
+        else:
+            return redirect('/login')
+            
     return redirect('/login')
 
 
 @app.route('/logout')
 def logout():
-    session.pop('email',None)
+    if 'email' in session:
+        session.pop('email', None)
     return redirect('/login')
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=80, debug=True)

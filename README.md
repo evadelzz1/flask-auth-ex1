@@ -1,12 +1,14 @@
-# flask-auth-ex1
+# flask_login3
 
 ## Install
 
-    git clone https://github.com/evadelzz1/flask-auth-ex1.git
+    git clone https://github.com/evadelzz1/flask_login3.git
 
-    cd ./flask-auth-ex1/
+    cd ./flask_login3/
 
-    python -m venv .venv && source .venv/bin/activate
+    python -m venv .venv
+    
+    source .venv/bin/activate
 
     pip install -r requirements.txt
 
